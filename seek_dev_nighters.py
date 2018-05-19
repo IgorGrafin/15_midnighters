@@ -45,7 +45,7 @@ def timestamp_to_hours(timestamp, user_timezone):
     ).hour
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     number_of_pages = get_number_of_pages()
     attempts_data = []
     attempts_data += load_attempts(number_of_pages)
