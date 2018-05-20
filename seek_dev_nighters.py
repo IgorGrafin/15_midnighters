@@ -3,21 +3,12 @@ import requests
 import datetime
 
 
-def get_number_of_pages():
-    url = "https://devman.org/api/challenges/solution_attempts/"
-    response = requests.get(url)
-    if response.ok:
-        return response.json()["number_of_pages"]
-
-
-def load_attempts(pages):
+def load_attempts():
     page = 1
-    pages = 1
     url = "https://devman.org/api/challenges/solution_attempts/"
-    while page <= pages:
+    while True:
         response = requests.get(url, params={"page": page})
         attempts_data = response.json()["records"]
-        pages = response.json()["number_of_pages"]
         for attempt in attempts_data:
             yield {
                 'username': attempt["username"],
@@ -25,6 +16,8 @@ def load_attempts(pages):
                 'timezone': attempt["timezone"],
             }
         page += 1
+        if page > response.json()["number_of_pages"]:
+            break
 
 
 def get_midnighters(attempts_data):
@@ -50,8 +43,7 @@ def convert_to_hours(timestamp, user_timezone):
 
 
 if __name__ == "__main__":
-    number_of_pages = get_number_of_pages()
-    attempts_data = load_attempts(number_of_pages)
+    attempts_data = load_attempts()
     midnighters = get_midnighters(attempts_data)
     print("Midnighters:")
     for username in midnighters:
