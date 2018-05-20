@@ -8,15 +8,15 @@ def load_attempts():
     url = "https://devman.org/api/challenges/solution_attempts/"
     while True:
         response = requests.get(url, params={"page": page})
-        attempts_data = response.json()["records"]
-        for attempt in attempts_data:
+        attempts_data = response.json()
+        for attempt in attempts_data["records"]:
             yield {
                 'username': attempt["username"],
                 'timestamp': attempt["timestamp"],
                 'timezone': attempt["timezone"],
             }
         page += 1
-        if page > response.json()["number_of_pages"]:
+        if page > attempts_data["number_of_pages"]:
             break
 
 
